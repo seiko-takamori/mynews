@@ -5,6 +5,9 @@ use App\Http\Controllers\Controller;
 
 //Profile  Modelを使えるようにする
 use App\Profile;
+use App\ProfileHistory;
+
+use Carbon\Carbon;
 
 
 
@@ -41,6 +44,11 @@ class ProfileController extends Controller
       unset($form['_token']);
       // 該当するデータを上書きして保存する
       $profile->fill($form)->save();
+      
+      $history = new ProfileHistory;
+      $history->profile_id = $profile->id;
+      $history->edited_at = Carbon::now();
+      $history->save();
       
         return redirect('admin/profile/edit?id=' . $request->id);
     }
